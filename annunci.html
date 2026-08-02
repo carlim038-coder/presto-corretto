@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Presto.it - Tutti gli Annunci</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">   
+  </head>
+  <body class="bg-black text-white">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-black fixed-top" id="navbar" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">
+          <img id="logoNavbar" src="./media/logo giallo.png" alt="logo" width="40" height="32">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="annunci.html">Annunci</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Chi siamo</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Intestazione Pagina -->
+    <header class="container text-center pt-5 mt-5">
+      <h1 class="display-3 fw-bold text-yellow">Tutti gli Annunci</h1>
+      <p class="lead">Esplora le offerte disponibili sulla nostra piattaforma</p>
+    </header>
+
+    <!-- Sezione Principale con Filtri (Accordion) e Annunci -->
+    <main class="container my-5">
+      <div class="row">
+        
+        <!-- Colonna Sinistra: Accordion -->
+        <div class="col-12 col-md-3 mb-4">
+          <h4 class="text-yellow mb-3">Filtra</h4>
+          
+          <div class="accordion" id="accordionExample">
+            
+            <!-- Elemento 1: Categoria -->
+            <div class="accordion-item bg-black border border-warning">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button bg-black text-yellow" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Categoria
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div id="radioWrapper" class="accordion-body text-yellow">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="categories" id="flexRadioDefault1" checked>
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      Tutte le categorie
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Elemento 2: Prezzo -->
+            <div class="accordion-item bg-black border border-warning mt-2">
+              <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed bg-black text-yellow" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Prezzo
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body text-yellow">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="priceFilter" id="priceAsc">
+                    <label class="form-check-label" for="priceAsc">Dal meno caro</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="priceFilter" id="priceDesc">
+                    <label class="form-check-label" for="priceDesc">Dal più caro</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Colonna Destra: Contenitore delle Card degli Annunci -->
+        <div class="col-12 col-md-9">
+          <div class="row g-4" id="annunciContainer">
+            <!-- Le card verranno inserite qui dal file JavaScript -->
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="annunci.js"></script>
+  </body>
+</html>
