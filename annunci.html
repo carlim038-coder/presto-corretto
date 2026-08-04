@@ -52,10 +52,16 @@
     <main class="container my-5">
       <div class="row">
         
-        <!-- Colonna Sinistra: Accordion -->
+        <!-- Colonna Sinistra: Filtri e Ricerca -->
         <div class="col-12 col-md-3 mb-4">
           <h4 class="text-yellow mb-3">Filtra</h4>
           
+          <!-- Filtro per Parola -->
+          <div class="mb-4">
+            <label for="wordInput" class="form-label text-yellow">Cerca per nome</label>
+            <input type="text" id="wordInput" class="form-control bg-black text-yellow border-warning" placeholder="Cerca un annuncio...">
+          </div>
+
           <div class="accordion" id="accordionExample">
             
             <!-- Elemento 1: Categoria -->

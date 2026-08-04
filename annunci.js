@@ -5,12 +5,21 @@ fetch('./annunci.json')
 
     let radiowrapper = document.querySelector('#radioWrapper');
     let cardWrapper = document.querySelector('#annunciContainer');
+    let wordInput = document.querySelector('#wordInput');
+    let priceAscBtn = document.querySelector('#priceAsc');
+    let priceDescBtn = document.querySelector('#priceDesc');
 
-    // Variabile per tenere traccia della categoria attualmente selezionata
-    let selectedCategory = 'all';
-
-    // 1. Funzione per creare i radio button delle categorie
+    // 1. Funzione per creare i radio button delle categorie dinamicamente
     function radioCreate() {
+        radiowrapper.innerHTML = `
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="categories" id="all" checked>
+                <label class="form-check-label" for="all">
+                    Tutti
+                </label>
+            </div>
+        `;
+
         let categories = data.map((annuncio) => annuncio.category);
         let uniqueCategories = new Set(categories);
 
@@ -33,15 +42,19 @@ fetch('./annunci.json')
     function showCards(array) {
         cardWrapper.innerHTML = '';
 
+        if (array.length === 0) {
+            cardWrapper.innerHTML = `<p class="text-center h4 text-warning">Nessun annuncio trovato.</p>`;
+            return;
+        }
+
         array.forEach((annuncio) => {
             let div = document.createElement('div');
             div.classList.add('col-12', 'col-md-4', 'mb-4');
             div.innerHTML = `
-                <div class="card bg-black text-yellow border border-warning h-100 p-3">
+                <div class="card bg-black text-yellow border border-warning rounded-4 p-4 h-100 d-flex flex-column justify-content-between text-center card-custom">
                     <p class="h2">${annuncio.name}</p>
                     <p class="h4">${annuncio.category}</p>
-                    <p class="lead">Prezzo: € ${annuncio.price}</p>
-                    <a href="#" class="btn btn-warning fw-bold mt-auto">Dettagli</a>
+                    <p class="lead">${annuncio.price} €</p>
                 </div>
             `;
             cardWrapper.appendChild(div);
@@ -51,60 +64,84 @@ fetch('./annunci.json')
     // Mostra tutte le card all'avvio
     showCards(data);
 
-    // Funzione centrale che restituisce i dati filtrati per categoria e ordinati per prezzo
-    function filterAndSort() {
-        let currentData = [];
+    // --- FUNZIONI DI FILTRAGGIO E ORDINAMENTO ---
 
-        // 1. Filtra per categoria
-        if (selectedCategory === 'all') {
-            currentData = [...data];
+    // A. Filtro per Categoria (con normalizzazione rigorosa in minuscolo)
+    function filterByCategory(array) {
+        let radioButtons = document.querySelectorAll('.form-check-input[name="categories"]');
+        let checkedRadio = Array.from(radioButtons).find((bottone) => bottone.checked);
+        let categoria = checkedRadio ? checkedRadio.id.toLowerCase() : 'all';
+
+        if (categoria !== 'all' && categoria !== 'flexradiodefault1') {
+            let filtered = array.filter((annuncio) => annuncio.category.toLowerCase() === categoria);
+            return filtered;
         } else {
-            currentData = data.filter((annuncio) => annuncio.category === selectedCategory);
+            return array;
         }
-
-        // 2. Controlla quale radio del prezzo è attivo e ordina di conseguenza
-        let priceAscBtn = document.querySelector('#priceAsc');
-        let priceDescBtn = document.querySelector('#priceDesc');
-
-        if (priceAscBtn.checked) {
-            currentData.sort((a, b) => Number(a.price) - Number(b.price));
-        } else if (priceDescBtn.checked) {
-            currentData.sort((a, b) => Number(b.price) - Number(a.price));
-        }
-
-        // Mostra a schermo il risultato combinato
-        showCards(currentData);
     }
 
-    // 3. Gestione del cambio categoria tramite i radio button
-    let radios = document.querySelectorAll('input[name="categories"]');
+    // B. Filtro per Parola Chiave
+    function filterByWord(array) {
+        if (wordInput && wordInput.value.trim() !== '') {
+            let filtered = array.filter((annuncio) => 
+                annuncio.name.toLowerCase().includes(wordInput.value.toLowerCase())
+            );
+            return filtered;
+        } else {
+            return array;
+        }
+    }
 
-    radios.forEach((radio) => {
-        radio.addEventListener('change', () => {
-            if (radio.id === 'flexRadioDefault1') {
-                selectedCategory = 'all';
-            } else {
-                selectedCategory = radio.id;
-            }
-            // Aggiorna la visualizzazione mantenendo attivo l'eventuale filtro prezzo
-            filterAndSort();
+    // C. Ordinamento per Prezzo
+    function sortByPrice(array) {
+        let sortedArray = [...array];
+
+        if (priceAscBtn && priceAscBtn.checked) {
+            sortedArray.sort((a, b) => Number(a.price) - Number(b.price));
+            return sortedArray;
+        } else if (priceDescBtn && priceDescBtn.checked) {
+            sortedArray.sort((a, b) => Number(b.price) - Number(a.price));
+            return sortedArray;
+        } else {
+            return sortedArray;
+        }
+    }
+
+    // D. Funzione Globale di Concatenazione
+    function globalFilter() {
+        let filteredByCategory = filterByCategory(data); 
+        let filteredByWord = filterByWord(filteredByCategory); 
+        let sortedByPrice = sortByPrice(filteredByWord); 
+
+        showCards(sortedByPrice);
+    }
+
+    // 4. Attivazione degli Event Listener
+    setTimeout(() => {
+        let radioButtons = document.querySelectorAll('.form-check-input[name="categories"]');
+        radioButtons.forEach((button) => {
+            button.addEventListener('change', () => {
+                globalFilter();
+            });
         });
-    });
+    }, 100);
 
-    // 4. Gestione dei radio button del prezzo
-    let priceAscBtn = document.querySelector('#priceAsc');
-    let priceDescBtn = document.querySelector('#priceDesc');
+    if (wordInput) {
+        wordInput.addEventListener('input', () => {
+            globalFilter();
+        });
+    }
 
-    priceAscBtn.addEventListener('change', () => {
-        if (priceAscBtn.checked) {
-            filterAndSort();
-        }
-    });
+    if (priceAscBtn) {
+        priceAscBtn.addEventListener('change', () => {
+            globalFilter();
+        });
+    }
 
-    priceDescBtn.addEventListener('change', () => {
-        if (priceDescBtn.checked) {
-            filterAndSort();
-        }
-    });
+    if (priceDescBtn) {
+        priceDescBtn.addEventListener('change', () => {
+            globalFilter();
+        });
+    }
 
 });
