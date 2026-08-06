@@ -92,25 +92,42 @@ if (allReviewsCards.length > 0) {
     });
 }
 
-// --- 5. Effetto apertura cerchi Chi Siamo ---
+// --- 5. Effetto apertura cerchi Chi Siamo e generazione Docenti ---
 let opener = document.querySelector('.opener');
-let movedDivs = document.querySelectorAll('.moved');
+let circle = document.querySelector('.circle');
 
-let check = false;
+let teachers = [
+    { name: 'Matteo', description: 'Docente Frontend di Hackademy 69', url: './media/Matteo.png' },
+    { name: 'Marco', description: 'Docente Frontend e responsabile Hackademy', url: './media/Marco.png' },
+    { name: 'Nicola', description: 'Docente Frontend e noto sex-symbol', url: './media/Nicola.png' },
+    { name: 'Davide', description: 'Docente Backend e giocatore di ruolo', url: './media/Davide.png' }
+];
 
-opener.addEventListener('click', ()=> {
-    if(check == false) {
-        opener.style.transform = 'rotate(45deg)';
-        movedDivs.forEach((moved, i)=> {
-            let angle = (360 * i) / movedDivs.length;
-            moved.style.transform = `rotate(${angle}deg) translate(150px)`;
-        });
-        check = true;
-    } else {
-        opener.style.transform = 'rotate(0deg)';
-        movedDivs.forEach((moved)=> {
-            moved.style.transform = `rotate(0deg) translate(0px)`;
-        });
-        check = false;
-    }
-});
+if (circle && opener) {
+    teachers.forEach((docente) => {
+        let div = document.createElement('div');
+        div.classList.add('moved');
+        div.style.backgroundImage = `url(${docente.url})`;
+        circle.appendChild(div);
+    });
+
+    let movedDivs = document.querySelectorAll('.moved');
+    let check = false;
+
+    opener.addEventListener('click', () => {
+        if (check == false) {
+            opener.style.transform = 'rotate(45deg)';
+            movedDivs.forEach((moved, i) => {
+                let angle = (360 * i) / movedDivs.length;
+                moved.style.transform = `rotate(${angle}deg) translate(150px) rotate(-${angle}deg)`;
+            });
+            check = true;
+        } else {
+            check = false;
+            opener.style.transform = '';
+            movedDivs.forEach((moved, i) => {
+                moved.style.transform = '';
+            });
+        }
+    });
+}

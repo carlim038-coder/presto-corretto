@@ -35,8 +35,8 @@
               <a class="nav-link active" href="annunci.html">Annunci</a>
             </li>
             <li class="nav-item">
-  <a class="nav-link" href="chisiamo.html">Chi Siamo</a>
-</li>
+              <a class="nav-link" href="chisiamo.html">Chi Siamo</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -48,7 +48,7 @@
       <p class="lead">Esplora le offerte disponibili sulla nostra piattaforma</p>
     </header>
 
-    <!-- Sezione Principale con Filtri (Accordion) e Annunci -->
+    <!-- Sezione Principale con Filtri e Annunci -->
     <main class="container my-5">
       <div class="row">
         
@@ -72,14 +72,8 @@
                 </button>
               </h2>
               <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div id="radioWrapper" class="accordion-body text-yellow">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="categories" id="flexRadioDefault1" checked>
-                    <label class="form-check-label" for="flexRadioDefault1">
-                      Tutte le categorie
-                    </label>
-                  </div>
-                </div>
+                <!-- radioWrapper pulito, verrà popolato da JS -->
+                <div id="radioWrapper" class="accordion-body text-yellow"></div>
               </div>
             </div>
 
@@ -110,7 +104,7 @@
         <!-- Colonna Destra: Contenitore delle Card degli Annunci -->
         <div class="col-12 col-md-9">
           <div class="row g-4" id="annunciContainer">
-            <!-- Le card verranno inserite qui dal file JavaScript -->
+            <!-- Le card verranno inserite qui da annunci.js -->
           </div>
         </div>
 
@@ -119,7 +113,8 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
+    <!-- Custom JS per gli annunci -->
     <script src="annunci.js"></script>
+    
   </body>
 </html>

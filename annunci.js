@@ -1,7 +1,7 @@
 fetch('./annunci.json')
 .then((response) => response.json())
 .then((data) => {
-    console.log(data);
+    console.log("Dati caricati correttamente:", data);
 
     let radiowrapper = document.querySelector('#radioWrapper');
     let cardWrapper = document.querySelector('#annunciContainer');
@@ -11,6 +11,8 @@ fetch('./annunci.json')
 
     // 1. Funzione per creare i radio button delle categorie dinamicamente
     function radioCreate() {
+        if (!radiowrapper) return;
+
         radiowrapper.innerHTML = `
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="categories" id="all" checked>
@@ -34,12 +36,21 @@ fetch('./annunci.json')
             `;
             radiowrapper.appendChild(div);
         });
+
+        // Agganciamo subito gli event listener ai radio button appena creati
+        let radioButtons = document.querySelectorAll('.form-check-input[name="categories"]');
+        radioButtons.forEach((button) => {
+            button.addEventListener('change', () => {
+                globalFilter();
+            });
+        });
     }
 
     radioCreate();
 
-    // 2. Funzione per mostrare le card nel DOM
+    // 2. Funzione per mostrare le card nel DOM (con sfondo giallo e testo nero)
     function showCards(array) {
+        if (!cardWrapper) return;
         cardWrapper.innerHTML = '';
 
         if (array.length === 0) {
@@ -51,10 +62,10 @@ fetch('./annunci.json')
             let div = document.createElement('div');
             div.classList.add('col-12', 'col-md-4', 'mb-4');
             div.innerHTML = `
-                <div class="card bg-black text-yellow border border-warning rounded-4 p-4 h-100 d-flex flex-column justify-content-between text-center card-custom">
-                    <p class="h2">${annuncio.name}</p>
+                <div class="card p-4 h-100 d-flex flex-column justify-content-between text-center">
+                    <p class="h2 fw-bold">${annuncio.name}</p>
                     <p class="h4">${annuncio.category}</p>
-                    <p class="lead">${annuncio.price} €</p>
+                    <p class="lead fw-bold">${annuncio.price} €</p>
                 </div>
             `;
             cardWrapper.appendChild(div);
@@ -66,13 +77,13 @@ fetch('./annunci.json')
 
     // --- FUNZIONI DI FILTRAGGIO E ORDINAMENTO ---
 
-    // A. Filtro per Categoria (con normalizzazione rigorosa in minuscolo)
+    // A. Filtro per Categoria
     function filterByCategory(array) {
         let radioButtons = document.querySelectorAll('.form-check-input[name="categories"]');
         let checkedRadio = Array.from(radioButtons).find((bottone) => bottone.checked);
         let categoria = checkedRadio ? checkedRadio.id.toLowerCase() : 'all';
 
-        if (categoria !== 'all' && categoria !== 'flexradiodefault1') {
+        if (categoria !== 'all') {
             let filtered = array.filter((annuncio) => annuncio.category.toLowerCase() === categoria);
             return filtered;
         } else {
@@ -116,16 +127,7 @@ fetch('./annunci.json')
         showCards(sortedByPrice);
     }
 
-    // 4. Attivazione degli Event Listener
-    setTimeout(() => {
-        let radioButtons = document.querySelectorAll('.form-check-input[name="categories"]');
-        radioButtons.forEach((button) => {
-            button.addEventListener('change', () => {
-                globalFilter();
-            });
-        });
-    }, 100);
-
+    // 4. Attivazione degli Event Listener per Ricerca e Prezzi
     if (wordInput) {
         wordInput.addEventListener('input', () => {
             globalFilter();
@@ -144,4 +146,5 @@ fetch('./annunci.json')
         });
     }
 
-});
+})
+.catch((error) => console.error("Errore nel caricamento del file JSON:", error));
