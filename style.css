@@ -52,7 +52,6 @@ h1, h2, h3, h4, h5, h6 {
     transition: all 0.5s ease; 
 }
 
-/* Sostituito !important con la specifica della classe combinata */
 .navbar.navbar-scrolled {
     background-color: var(--black);  
     padding-top: 15px;    
@@ -89,11 +88,19 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 10px 20px rgba(255, 232, 31, 0.2); 
 }
 
+
 .number {
     font-size: 2em; 
     font-weight: bold; 
     color: var(--yellow); 
     margin-right: 10px; 
+}
+.small-video {
+    width: 100%;
+    max-width: 250px; 
+    height: auto;
+    display: block;
+    margin: 0 auto;   
 }
 
 /* --- Recensioni e Card --- */
@@ -113,7 +120,6 @@ h1, h2, h3, h4, h5, h6 {
     padding: 20px;
 }
 
-/* Sostituito !important con selettori specifici nidificati */
 .card-review .stars, 
 .card-review .stars i, 
 .card-review li {
@@ -141,6 +147,18 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* Cerchio grande che interseca le posizioni dei docenti */
+.big-intersect-circle {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border: 2px dashed var(--yellow);
+    border-radius: 50%;
+    pointer-events: none;
+    transition: 0.5s;
+    opacity: 0.6;
 }
 
 .opener {
@@ -173,11 +191,11 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
 }
 
-/* Stile Flip Card */
+/* --- Flip Card Ingrandita per il Curriculum --- */
 .flip-card {
     background-color: transparent;
-    width: 280px;
-    height: 380px;
+    width: 340px;
+    height: 450px;
     perspective: 1000px;
 }
 
@@ -186,12 +204,8 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.6s;
+    transition: transform 0.8s;
     transform-style: preserve-3d;
-}
-
-.flip-card:hover .inner {
-    transform: rotateY(180deg);
 }
 
 .inner-face {
@@ -202,30 +216,61 @@ h1, h2, h3, h4, h5, h6 {
     backface-visibility: hidden;
     background-color: var(--black);
     color: var(--yellow);
-    border: 2px solid var(--yellow);
+    border: 3px solid var(--yellow);
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 30px;
 }
 
+/* Retro della card con foto a tutto schermo (senza filtri scuri) */
 .inner-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     transform: rotateY(180deg);
-    background-color: var(--yellow);
-    color: var(--black);
+    background-color: var(--black);
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    border: 3px solid var(--yellow);
+    border-radius: 20px;
+    overflow: hidden;
 }
 
-/* Stile Card Annunci (Senza !important, usiamo la specificità della classe) */
-#annunciContainer .card {
-    background-color: var(--yellow);
-    color: var(--black);
-    border: 2px solid var(--black);
+/* Contenuto del Curriculum posizionato sul retro in basso */
+.back-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.75); 
+    text-align: left;
+    border-bottom-left-radius: 17px;
+    border-bottom-right-radius: 17px;
 }
 
+.back-content h3 {
+    color: var(--yellow);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+}
 
-/* Regola specifica senza !important per rendere le card gialle con testo nero */
+.back-content p {
+    color: #fff;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin: 0;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+}
+
+/* Stile Card Annunci */
 div.card {
     background-color: var(--yellow);
     color: var(--black);

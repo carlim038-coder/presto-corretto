@@ -1,4 +1,4 @@
-// --- 1. Gestione Navbar allo Scroll ---
+// ---Gestione Navbar allo Scroll ---
 let navbar = document.querySelector('.navbar');
 let links = document.querySelectorAll('.nav-link');
 let logoNavbar = document.querySelector('#logoNavbar');
@@ -17,7 +17,7 @@ if (navbar && logoNavbar) {
     });
 }
 
-// --- 2. Numeri incrementali e Intersection Observer ---
+// --- Numeri incrementali e Intersection Observer ---
 let firstNumber = document.querySelector("#firstNumber");
 let secondNumber = document.querySelector("#secondNumber");
 let thirdNumber = document.querySelector("#thirdNumber");
@@ -57,50 +57,82 @@ if (triggerElement) {
     observer.observe(triggerElement);
 }
 
-// --- 3. Inizializzazione Swiper ---
+// --- Gestione Recensioni, Stelline Dinamiche e Swiper Orizzontale ---
+let reviews = [
+    { user: 'Matteo', description: 'Il piu` bel sito di annunci del mondo', rank: 5 },
+    { user: 'Alin', description: 'Veramente non mi da di niente', rank: 1 },
+    { user: 'Michael', description: 'Mi piace tranne per Star Trek', rank: 3 },
+    { user: 'Arina', description: 'Star Wars e` meglio!', rank: 5 }
+];
+
+let swiperWrapper = document.querySelector('.swiper-wrapper');
+
+if (swiperWrapper) {
+    reviews.forEach((recensione) => {
+        let div = document.createElement('div');
+        div.classList.add('swiper-slide');
+        div.innerHTML = `
+            <div class="card-review">
+                <p class="lead text-center">${recensione.description}</p>
+                <p class="h4 text-center">${recensione.user}</p>
+                <div class="d-flex justify-content-center star"></div>
+            </div>
+        `;
+        swiperWrapper.appendChild(div);
+    });
+}
+
+// ---Generazione dinamica delle stelline in base al rank
+let stars = document.querySelectorAll('.star');
+
+stars.forEach((star, index) => {
+    for (let i = 1; i <= reviews[index].rank; i++) {
+        let icon = document.createElement('i');
+        icon.classList.add('fa-solid', 'fa-star');
+        star.appendChild(icon);
+    }
+});
+
+// ---Inizializzazione Swiper Orizzontale (1 alla volta)
 let swiperContainer = document.querySelector('.swiper');
 if (swiperContainer) {
     var swiper = new Swiper('.swiper', {
-        effect: 'flip',
+        // Rimosso 'direction: vertical' per farlo andare in orizzontale
+        effect: 'slide', // Effetto di scorrimento orizzontale standard (o 'fade' / 'cube' se preferisci)
         grabCursor: true,
-    });
-}
-
-// --- 4. Gestione Recensioni e Stelline Dinamiche ---
-let reviews = [
-    { name: "Recensione 1", text: "il più bel sito del mondo!", stars: 5 },
-    { name: "Recensione 2", text: "Lorem ipsum dolor sit amet.", stars: 4 },
-    { name: "Recensione 3", text: "Lorem ipsum dolor sit amet.", stars: 3 }
-];
-
-let allReviewsCards = document.querySelectorAll('.card-review');
-if (allReviewsCards.length > 0) {
-    allReviewsCards.forEach((card, index) => {
-        let starsContainer = card.querySelector('.stars');
+        slidesPerView: 1, // Mostra una sola recensione alla volta
+        spaceBetween: 30, // Spazio tra le slide
+        loop: true,       // Fa ricominciare il giro delle recensioni all'infinito
         
-        if (starsContainer) {
-            starsContainer.innerHTML = ''; 
-            let reviewData = reviews[index];
-            if (reviewData) {
-                for (let i = 1; i <= reviewData.stars; i++) {
-                    let icon = document.createElement("i");
-                    icon.className = "fa-solid fa-star text-warning";
-                    starsContainer.appendChild(icon);
-                }
-            }
-        }
+        //  (autoplay)
+        
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        
+    });
+
+    // ---Effetto hover per passare alla slide successiva al passaggio del mouse
+    let allSlides = document.querySelectorAll('.swiper-slide');
+    allSlides.forEach((slide) => {
+        slide.addEventListener('mouseenter', () => {
+            swiper.slideNext();
+        });
     });
 }
 
-// --- 5. Effetto apertura cerchi Chi Siamo e generazione Docenti ---
+// --- Effetto apertura cerchi Chi Siamo e generazione Docenti ---
+
 let opener = document.querySelector('.opener');
 let circle = document.querySelector('.circle');
 
+
 let teachers = [
-    { name: 'Matteo', description: 'Docente Frontend di Hackademy 69', url: './media/Matteo.png' },
-    { name: 'Marco', description: 'Docente Frontend e responsabile Hackademy', url: './media/Marco.png' },
-    { name: 'Nicola', description: 'Docente Frontend e noto sex-symbol', url: './media/Nicola.png' },
-    { name: 'Davide', description: 'Docente Backend e giocatore di ruolo', url: './media/Davide.png' }
+    { name: 'Matteo', description: 'Curriculum Vitae di Matteo:\nDocente Frontend con 5 anni di esperienza nello sviluppo di interfacce web avanzate e SPA.', url: './media/Matteo.png' },
+    { name: 'Angela', description: 'Curriculum Vitae di Angela:\nEsperta di Project Management e Agile methodologies, coordina i team di sviluppo.', url: './media/Angela.png' },
+    { name: 'Marco', description: 'Curriculum Vitae di Marco:\nLead Developer e responsabile didattico dell\'Hackademy, specializzato in JavaScript e React.', url: './media/Marco.jpg' },
+    { name: 'Giancarlo', description: 'Curriculum Vitae di Giancarlo:\nArchitetto Backend e Database Administrator, appassionato di sicurezza informatica.', url: './media/Giancarlo.png' }
 ];
 
 if (circle && opener) {
@@ -108,6 +140,27 @@ if (circle && opener) {
         let div = document.createElement('div');
         div.classList.add('moved');
         div.style.backgroundImage = `url(${docente.url})`;
+        
+        // Al click sul singolo docente, aggiorna la flip card e forza la rotazione della card
+        div.addEventListener('click', () => {
+            let backName = document.querySelector('#backName');
+            let backDescription = document.querySelector('#backDescription');
+            let innerBack = document.querySelector('#cardBack');
+            let flipCardInner = document.querySelector('#flipCardInner');
+
+            if (backName && backDescription && innerBack) {
+                backName.innerHTML = docente.name;
+                backDescription.innerHTML = docente.description;
+                // Imposta la foto come sfondo completo del retro
+                innerBack.style.backgroundImage = `url(${docente.url})`;
+            }
+
+            // Attiva l'effetto di rotazione della flip card via JS per mostrarla subito
+            if (flipCardInner) {
+                flipCardInner.style.transform = 'rotateY(180deg)';
+            }
+        });
+
         circle.appendChild(div);
     });
 
@@ -115,6 +168,8 @@ if (circle && opener) {
     let check = false;
 
     opener.addEventListener('click', () => {
+        let flipCardInner = document.querySelector('#flipCardInner');
+        
         if (check == false) {
             opener.style.transform = 'rotate(45deg)';
             movedDivs.forEach((moved, i) => {
@@ -128,6 +183,10 @@ if (circle && opener) {
             movedDivs.forEach((moved, i) => {
                 moved.style.transform = '';
             });
+            // Riporta la card sul fronte se chiudi i cerchi
+            if (flipCardInner) {
+                flipCardInner.style.transform = 'rotateY(0deg)';
+            }
         }
     });
 }
